@@ -21,7 +21,7 @@ The proposed packaging conventions are:
 - Optionally use `0.(N+1).0-devM` for non-release `main` commits
 - Start with `-dev1` if using non-release `main` commit versions
 
-A package having three commits on `main`, then a release, then two more commits to `main`, then another release, will for example use the following versions:
+A package having three commits on `main`, then a release, then two more commits to `main`, then another release, will for example use the following versions if opting into `-devM` versions:
 
 ```
 0.1.0-dev1
