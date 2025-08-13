@@ -1,0 +1,51 @@
+[build-system]
+requires      = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name            = "asf-example"
+# This is automatically updated
+version         = "0.0.1-dev1"
+description     = "Example package for ASF Tooling"
+readme          = "README.md"
+requires-python = ">=3.13"
+license         = "Apache-2.0"
+authors         = [{name = "ASF Tooling", email = "dev@tooling.apache.org"}]
+classifiers     = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+    "pygit2>=1.18.1",
+    "tomlkit>=0.13.3",
+]
+
+[project.scripts]
+asf-example = "asf.example:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/asf"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+ignore = []
+select = [
+  "ASYNC", # flake8-async
+  "C90",   # cyclomatic-complexity
+  "E",     # pycodestyle
+  "F",     # pyflakes
+  "I",     # isort
+  "N",     # pep8-naming
+  "RUF",   # ruff-checks
+  "TC",    # flake8-type-checking
+  "TID",   # flake8-tidy-imports
+  "UP",    # pyupgrade
+  "W"      # pycodestyle warning
+]
+
+[tool.uv]
+# This is automatically updated
+exclude-newer = "2025-08-13T16:14:25Z"
