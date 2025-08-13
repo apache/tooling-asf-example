@@ -1,0 +1,14 @@
+__pycache__/
+.DS_Store
+.env
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+.vscode/
+*.egg-info/
+*.pyc
+dev/
+dist/
+node_modules/
+package-lock.json
