@@ -32,3 +32,5 @@ A package having three commits on `main`, then a release, then two more commits 
 0.0.2-dev2
 0.0.2
 ```
+
+These packaging conventions are proposed only for ASF Infra and Toolings packages which will be published to PyPI. Other packages, for internal use, may use any packaging conventions. Aligning with these conventions, if adopted, would, however, make it easier to promote internal packages to PyPI.
