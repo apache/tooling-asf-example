@@ -14,15 +14,18 @@ jobs:
           - { name: musllinux-amd64,   image: quay.io/pypa/musllinux_1_2_x86_64,   runs_on: ubuntu-22.04 }
           - { name: musllinux-aarch64, image: quay.io/pypa/musllinux_1_2_aarch64,  runs_on: ubuntu-22.04-arm }
     runs-on: ${{ matrix.runs_on }}
-    container: ${{ matrix.image }}
     steps:
       - name: Checkout repository (shallow, no persisted credentials)
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
         with:
           fetch-depth: 1
           persist-credentials: false
-      - name: Build dists with uv (sdist+wheel)
-        run: uv build --sdist --wheel
+      - name: Build dists with uv inside ${{ matrix.image }}
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/work" -w /work \
+            ${{ matrix.image }} \
+            sh -lc 'uv build --sdist --wheel'
       - name: Upload dists artifact (${{ matrix.name }})
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
