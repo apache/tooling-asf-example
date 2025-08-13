@@ -16,19 +16,19 @@ The proposed packaging conventions are:
 - Use `asf.*` for package interfaces, utilising PEP 420 namespacing
 - Ensure that package code is in `src/asf/*/` only
 - Ensure that `src/asf/*/` contains an `__init__.py`
-- Use `0.N.0` for versions, starting with `0.1.0`
-- Increment `N` for each released version, avoiding patch versions
-- Optionally use `0.(N+1).0-devM` for non-release `main` commits
+- Use `0.0.N` for versions, starting with `0.0.1`
+- Increment `N` for each released version
+- Optionally use `0.0.(N+1)-devM` for non-release `main` commits
 - Start with `-dev1` if using non-release `main` commit versions
 
 A package having three commits on `main`, then a release, then two more commits to `main`, then another release, will for example use the following versions if opting into `-devM` versions:
 
 ```
-0.1.0-dev1
-0.1.0-dev2
-0.1.0-dev3
-0.1.0
-0.2.0-dev1
-0.2.0-dev2
-0.2.0
+0.0.1-dev1
+0.0.1-dev2
+0.0.1-dev3
+0.0.1
+0.0.2-dev1
+0.0.2-dev2
+0.0.2
 ```
