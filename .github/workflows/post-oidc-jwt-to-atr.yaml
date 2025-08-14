@@ -1,0 +1,28 @@
+name: Post GitHub OIDC JWT to the ATR
+on: workflow_dispatch
+jobs:
+  send:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request OIDC token
+        id: mint
+        shell: bash
+        run: |
+          set -euo pipefail
+          _url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=example"
+          _token="${ACTIONS_ID_TOKEN_REQUEST_TOKEN}"
+          _jwt="$(curl -sS -H "Authorization: bearer ${_token}" "${_url}" | jq -er '.value')"
+          echo "::add-mask::${_jwt}"
+          echo "jwt=${_jwt}" >> "$GITHUB_OUTPUT"
+
+      - name: POST to ATR
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sS -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"jwt\":\"${{ steps.mint.outputs.jwt }}\"}" \
+            https://release-test.apache.org/api/jwt/github
