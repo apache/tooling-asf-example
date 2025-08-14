@@ -1,4 +1,3 @@
-name: Post GitHub OIDC JWT to the ATR
 on: workflow_dispatch
 jobs:
   send:
@@ -12,7 +11,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          _url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=example"
+          _url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=atr-test"
           _token="${ACTIONS_ID_TOKEN_REQUEST_TOKEN}"
           _jwt="$(curl -sS -H "Authorization: bearer ${_token}" "${_url}" | jq -er '.value')"
           echo "::add-mask::${_jwt}"
