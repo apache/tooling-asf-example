@@ -1,4 +1,7 @@
+name: post-oidc-jwt-to-atr
 on: workflow_dispatch
+permissions: { contents: read }
+
 jobs:
   send:
     permissions:
