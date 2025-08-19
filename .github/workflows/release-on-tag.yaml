@@ -77,10 +77,11 @@ jobs:
           path: dist
       - name: Create GitHub prerelease for ${GITHUB_REF_NAME}
         env:
-            GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" dist/* \
-          --prerelease --notes "Dev release ${GITHUB_REF_NAME}"
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --prerelease --notes "Development release ${GITHUB_REF_NAME}" \
+            --verify-tag -R "$GITHUB_REPOSITORY"
       - name: Publish to TestPyPI (Trusted Publisher)
         uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
         with:
@@ -102,12 +103,13 @@ jobs:
         with:
           merge-multiple: true
           path: dist
-      - name: Create GitHub Release for ${GITHUB_REF_NAME}
+      - name: Create GitHub release for ${GITHUB_REF_NAME}
         env:
-            GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" dist/* \
-          --notes "Release ${GITHUB_REF_NAME}"
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --notes "Release ${GITHUB_REF_NAME}" \
+            --verify-tag -R "$GITHUB_REPOSITORY"
       - name: Publish to PyPI (Trusted Publisher)
         uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
         with:
