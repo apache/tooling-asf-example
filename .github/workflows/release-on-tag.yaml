@@ -13,7 +13,6 @@ env:
 jobs:
   linux:
     name: ${{ matrix.name }}
-    runs-on: ${{ matrix.runs_on }}
     strategy:
       fail-fast: false
       matrix:
@@ -22,31 +21,32 @@ jobs:
           - { name: manylinux-aarch64, image: quay.io/pypa/manylinux_2_28_aarch64, runs_on: ubuntu-22.04-arm }
           - { name: musllinux-amd64,   image: quay.io/pypa/musllinux_1_2_x86_64,   runs_on: ubuntu-22.04 }
           - { name: musllinux-aarch64, image: quay.io/pypa/musllinux_1_2_aarch64,  runs_on: ubuntu-22.04-arm }
+    runs-on: ${{ matrix.runs_on }}
     steps:
-      - name: Checkout (shallow, no persisted creds)
+      - name: Checkout (shallow, no persisted credentials)
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
         with:
           fetch-depth: 1
           persist-credentials: false
-
       - name: Build dists with uv inside ${{ matrix.image }}
         run: |
-          docker run --rm -v "$GITHUB_WORKSPACE:/work" -w /work \
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/work" -w /work \
             ${{ matrix.image }} \
-            sh -lc 'python3 -m pip -q install -U pip uv && uv build --sdist --wheel'
-
+            sh -lc 'uv build --sdist --wheel'
       - name: Upload dists artifact (${{ matrix.name }})
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ matrix.name }}
           path: dist/*
 
   macos-aarch64:
+    name: macos-aarch64
     runs-on: macos-14
     strategy:
-        fail-fast: false
+      fail-fast: false
     steps:
-      - name: Checkout (shallow, no persisted creds)
+      - name: Checkout (shallow, no persisted credentials)
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
         with:
           fetch-depth: 1
@@ -56,7 +56,7 @@ jobs:
       - name: Build dists with uv (sdist+wheel)
         run: uv build --sdist --wheel
       - name: Upload dists artifact (macos-aarch64)
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: macos-aarch64
           path: dist/*
@@ -78,7 +78,9 @@ jobs:
       - name: Create GitHub prerelease for ${GITHUB_REF_NAME}
         env:
             GITHUB_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" dist/* --prerelease --notes "Dev release ${GITHUB_REF_NAME}"
+        run: |
+          gh release create "${GITHUB_REF_NAME}" dist/* \
+          --prerelease --notes "Dev release ${GITHUB_REF_NAME}"
       - name: Publish to TestPyPI (Trusted Publisher)
         uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
         with:
@@ -103,7 +105,9 @@ jobs:
       - name: Create GitHub Release for ${GITHUB_REF_NAME}
         env:
             GITHUB_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" dist/* --notes "Release ${GITHUB_REF_NAME}"
+        run: |
+          gh release create "${GITHUB_REF_NAME}" dist/* \
+          --notes "Release ${GITHUB_REF_NAME}"
       - name: Publish to PyPI (Trusted Publisher)
         uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
         with:
