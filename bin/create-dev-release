@@ -1,0 +1,49 @@
+#!/bin/sh
+set -eu
+
+_extract_version() {
+  sed -n '/^ *version *= *"/{ s/^ *version *= *"\([^"]*\)".*$/\1/; p; q; }' "$1"
+}
+
+_is_dev_version() {
+  grep -Eq '^0\.0\.[1-9][0-9]*-dev[1-9][0-9]*$'
+}
+
+_tag="$(_extract_version pyproject.toml)"
+
+if test -z "$_tag"
+then
+  echo "error: did not find a version in pyproject.toml" >&2
+  exit 1
+fi
+
+if echo "$_tag" | _is_dev_version
+then
+  :
+else
+  echo "error: expected dev version, got '$_tag'" >&2
+  exit 1
+fi
+
+if git diff --cached --quiet
+then
+  echo "error: nothing is staged, cannot commit" >&2
+  exit 1
+fi
+
+if git show-ref --verify --quiet "refs/tags/v$_tag"
+then
+  echo "error: local tag v$_tag already exists" >&2
+  exit 1
+fi
+
+git add -A
+
+git fetch --tags
+git pull --rebase --autostash
+
+git commit
+git push origin HEAD
+
+git tag -a "v$_tag" -m "Release $_tag"
+git push origin "v$_tag"
