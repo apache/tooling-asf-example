@@ -1,6 +1,6 @@
 # asf-example
 
-**This is not an official release of the Apache Software Foundation (ASF).**
+**This package does not have official Apache Software Foundation (ASF) releases.**
 
 This is an example test package issued by Tooling at the ASF. It contains no stable user facing functionality. We do not make guarantees about any of the interfaces contained herein, nor the continued existence of this package.
 
@@ -9,6 +9,8 @@ The purpose of this package is to test:
 - Proposed package naming conventions and version schemes within ASF Infra and ASF Tooling
 - GHA workflows for trickle down use in other ASF Tooling projects
 - Interaction with the ATR platform presently under development by ASF Tooling
+
+## Proposed conventions
 
 The proposed packaging conventions are:
 
@@ -33,4 +35,4 @@ A package having three commits on `main`, then a release, then two more commits 
 0.0.2
 ```
 
-These packaging conventions are proposed only for ASF Infra and Toolings packages which will be published to PyPI. Other packages, for internal use, may use any packaging conventions. Aligning with these conventions, if adopted, would, however, make it easier to promote internal packages to PyPI.
+These packaging conventions are proposed only for ASF Infra and Tooling packages which will be published to PyPI. Other packages, for internal use, may use any packaging conventions. Aligning with these conventions, if adopted, would, however, make it easier to promote internal packages to PyPI.

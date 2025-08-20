@@ -20,11 +20,20 @@ jobs:
           echo "::add-mask::${_jwt}"
           echo "jwt=${_jwt}" >> "$GITHUB_OUTPUT"
 
+      - name: Generate an ephemeral SSH key
+        id: ssh
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh-keygen -t ed25519 -N "" -f "$RUNNER_TEMP/ssh_key"
+          echo "SSH_PRIVATE_KEY_PATH=$RUNNER_TEMP/ssh_key" >> "$GITHUB_ENV"
+          echo "SSH_PUBLIC_KEY=$(cat "$RUNNER_TEMP/ssh_key.pub")" >> "$GITHUB_ENV"
+
       - name: POST to ATR
         shell: bash
         run: |
           set -euo pipefail
           curl -sS -X POST \
             -H "Content-Type: application/json" \
-            -d "{\"jwt\":\"${{ steps.mint.outputs.jwt }}\"}" \
+            -d "{\"jwt\":\"${{ steps.mint.outputs.jwt }}\",\"ssh_key\":\"$SSH_PUBLIC_KEY\"}" \
             https://release-test.apache.org/api/jwt/github
