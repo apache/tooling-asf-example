@@ -43,7 +43,7 @@ runs:
       shell: bash
       run: |
         set -euxo pipefail
-        command -v rsync > /dev/null || { sudo apt-get update -y && sudo apt-get install -y rsync }
+        command -v rsync > /dev/null || { sudo apt-get update -y && sudo apt-get install -y rsync; }
         src="${{ inputs.src }}"
         case "$src" in */) ;; *) src="$src/";; esac
         rsync ${{ inputs.rsync-args }} \
