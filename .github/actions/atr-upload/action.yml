@@ -1,0 +1,51 @@
+name: "Upload to ATR using GitHub OIDC and rsync"
+description: "Create a GitHub OIDC JWT, register an ephemeral SSH key with ATR, then rsync a directory to ATR."
+branding: { icon: upload-cloud, color: blue }
+
+inputs:
+  src:        { description: "Local dir", default: "dist" }
+  dest:       { description: "Remote (user@host:/path/)", required: true }
+  audience:   { description: "OIDC audience", default: "atr-test" }
+  api-url:    { description: "ATR endpoint", default: "https://release-test.apache.org/api/jwt/github" }
+  ssh-port:   { description: "SSH port", default: "2222" }
+  rsync-args: { description: "Arguments for rsync", default: "-av" }
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create a GitHub OIDC JWT
+      shell: bash
+      run: |
+        set -euxo pipefail
+        url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${{ inputs.audience }}"
+        jwt="$(curl -sS -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$url" \
+             | python3 -c 'import json, sys; print(json.load(sys.stdin)["value"])')"
+        echo "::add-mask::$jwt"
+        echo "JWT=$jwt" >> "$GITHUB_ENV"
+
+    - name: Generate an ephemeral SSH key
+      shell: bash
+      run: |
+        set -euxo pipefail
+        ssh-keygen -t ed25519 -N "" -f "$RUNNER_TEMP/ssh_key"
+        echo "SSH_PRIVATE_KEY_PATH=$RUNNER_TEMP/ssh_key" >> "$GITHUB_ENV"
+        echo "SSH_PUBLIC_KEY=$(cat "$RUNNER_TEMP/ssh_key.pub")" >> "$GITHUB_ENV"
+
+    - name: Register the ephemeral SSH key with ATR
+      shell: bash
+      run: |
+        set -euxo pipefail
+        curl -sS -X POST -H "Content-Type: application/json" \
+          -d "{\"jwt\":\"$JWT\",\"ssh_key\":\"$SSH_PUBLIC_KEY\"}" \
+          "${{ inputs.api-url }}"
+
+    - name: Upload to ATR using rsync
+      shell: bash
+      run: |
+        set -euxo pipefail
+        command -v rsync > /dev/null || { sudo apt-get update -y && sudo apt-get install -y rsync }
+        src="${{ inputs.src }}"
+        case "$src" in */) ;; *) src="$src/";; esac
+        rsync ${{ inputs.rsync-args }} \
+          -e "ssh -p ${{ inputs.ssh-port }} -i $SSH_PRIVATE_KEY_PATH -o StrictHostKeyChecking=accept-new" \
+          "$src" "${{ inputs.dest }}"

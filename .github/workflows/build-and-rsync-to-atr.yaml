@@ -31,38 +31,8 @@ jobs:
           ls -l dist
           sha256sum dist/*
 
-      - name: Request OIDC token (aud=atr-test)
-        id: mint
-        shell: bash
-        run: |
-          set -euxo pipefail
-          url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=atr-test"
-          jwt="$(curl -sS -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$url" | jq -er '.value')"
-          echo "::add-mask::$jwt"
-          echo "jwt=$jwt" >> "$GITHUB_OUTPUT"
-
-      - name: Generate ephemeral SSH key
-        id: ssh
-        shell: bash
-        run: |
-          set -euxo pipefail
-          ssh-keygen -t ed25519 -N "" -f "$RUNNER_TEMP/ssh_key"
-          echo "SSH_PRIVATE_KEY_PATH=$RUNNER_TEMP/ssh_key" >> "$GITHUB_ENV"
-          echo "SSH_PUBLIC_KEY=$(cat "$RUNNER_TEMP/ssh_key.pub")" >> "$GITHUB_ENV"
-
-      - name: Register key with ATR
-        shell: bash
-        run: |
-          set -euxo pipefail
-          curl -sS -X POST \
-            -H "Content-Type: application/json" \
-            -d "{\"jwt\":\"${{ steps.mint.outputs.jwt }}\",\"ssh_key\":\"$SSH_PUBLIC_KEY\"}" \
-            https://release-test.apache.org/api/jwt/github
-
-      - name: Upload dist/ to ATR via rsync (SSH :2222)
-        shell: bash
-        run: |
-          set -euxo pipefail
-          rsync -av \
-            -e "ssh -p 2222 -i $RUNNER_TEMP/ssh_key -o StrictHostKeyChecking=accept-new" \
-            dist/ sbp@release-test.apache.org:/tooling/0.3/
+      - name: Upload to ATR using a local composite action
+        uses: ./.github/actions/atr-upload
+        with:
+          src: dist
+          dest: sbp@release-test.apache.org:/tooling/0.3/
