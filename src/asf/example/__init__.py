@@ -37,7 +37,7 @@ import tomlkit.items
 
 PROJECT: Final[str] = "asf-example"
 # This is automatically updated
-VERSION: Final[str] = "0.0.1-dev11"
+VERSION: Final[str] = "0.0.1-dev12"
 
 
 class BumpMode(enum.Enum):

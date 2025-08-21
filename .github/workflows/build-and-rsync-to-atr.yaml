@@ -63,6 +63,6 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          rsync -av --stats \
+          rsync -av \
             -e "ssh -p 2222 -i $RUNNER_TEMP/ssh_key -o StrictHostKeyChecking=accept-new" \
             dist/ sbp@release-test.apache.org:/tooling/0.3/
