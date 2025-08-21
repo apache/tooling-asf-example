@@ -55,6 +55,8 @@ jobs:
           persist-credentials: false
       - name: Setup uv
         uses: astral-sh/setup-uv@e92bafb6253dcd438e0484186d7669ea7a8ca1cc # v6.4.3
+        with:
+          enable-cache: false
       - name: Build dists with uv (sdist+wheel)
         run: uv build --sdist --wheel
       - name: Show dist hashes
