@@ -34,5 +34,6 @@ jobs:
       - name: Upload to ATR using a local composite action
         uses: ./.github/actions/atr-upload
         with:
-          src: dist
-          dest: sbp@release-test.apache.org:/tooling/0.3/
+          asf-uid: sbp
+          project: tooling
+          version: 0.3

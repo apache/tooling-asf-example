@@ -3,10 +3,12 @@ description: "Create a GitHub OIDC JWT, register an ephemeral SSH key with ATR, 
 branding: { icon: upload-cloud, color: blue }
 
 inputs:
+  asf-uid:    { description: "ASF UID", required: true }
+  project:    { description: "Project", required: true }
+  version:    { description: "Version", required: true }
   src:        { description: "Local dir", default: "dist" }
-  dest:       { description: "Remote (user@host:/path/)", required: true }
   audience:   { description: "OIDC audience", default: "atr-test" }
-  api-url:    { description: "ATR endpoint", default: "https://release-test.apache.org/api/jwt/github" }
+  atr-host:   { description: "ATR host", default: "release-test.apache.org" }
   ssh-port:   { description: "SSH port", default: "2222" }
   rsync-args: { description: "Arguments for rsync", default: "-av" }
 
@@ -37,7 +39,7 @@ runs:
         set -euxo pipefail
         curl -sS -X POST -H "Content-Type: application/json" \
           -d "{\"jwt\":\"$JWT\",\"ssh_key\":\"$SSH_PUBLIC_KEY\"}" \
-          "${{ inputs.api-url }}"
+          "https://${{ inputs.atr-host }}/api/jwt/github"
 
     - name: Upload to ATR using rsync
       shell: bash
@@ -48,4 +50,4 @@ runs:
         case "$src" in */) ;; *) src="$src/";; esac
         rsync ${{ inputs.rsync-args }} \
           -e "ssh -p ${{ inputs.ssh-port }} -i $SSH_PRIVATE_KEY_PATH -o StrictHostKeyChecking=accept-new" \
-          "$src" "${{ inputs.dest }}"
+          "$src" "${{ inputs.asf-uid }}@${{ inputs.atr-host }}:/${{ inputs.project }}/${{ inputs.version }}/"
