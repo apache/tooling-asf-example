@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name            = "asf-example"
 # This is automatically updated
-version         = "0.0.1-dev19"
+version         = "0.0.1-dev20"
 description     = "Example package for ASF Tooling"
 readme          = "README.md"
 requires-python = ">=3.13"
@@ -48,4 +48,4 @@ select = [
 
 [tool.uv]
 # This is automatically updated
-exclude-newer = "2025-08-29T13:29:53Z"
+exclude-newer = "2025-08-29T14:00:47Z"
