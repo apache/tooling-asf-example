@@ -1,0 +1,39 @@
+name: resolve-vote-on-atr
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version
+        required: true
+        type: string
+      resolve_resolution:
+        description: Vote resolution
+        required: true
+        type: choice
+        options:
+          - passed
+          - failed
+        default: passed
+
+permissions: { contents: read }
+
+jobs:
+  resolve-vote:
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout (shallow, no persisted credentials)
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Resolve vote on ATR
+        uses: apache/tooling-actions/release-on-atr@18096a803b6eea7a7b567bcfa55a8171d0baa311
+        with:
+          version: ${{ inputs.version }}
+          resolve: "true"
+          resolve-resolution: ${{ inputs.resolve_resolution }}
