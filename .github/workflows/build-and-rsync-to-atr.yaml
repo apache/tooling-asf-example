@@ -32,7 +32,7 @@ jobs:
           sha256sum dist/*
 
       - name: Upload to ATR using a local composite action
-        uses: apache/tooling-actions/upload-to-atr@bbbae990619d9296492e3c236a04616569e21761
+        uses: apache/tooling-actions/upload-to-atr@069a1104d7901d8491422b71f8e9fbe8674ecf50
         with:
           asf-uid: sbp
           project: tooling
