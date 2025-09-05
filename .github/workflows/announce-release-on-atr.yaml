@@ -1,0 +1,55 @@
+name: announce-release-on-atr
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version
+        required: true
+        type: string
+      announce_revision:
+        description: Revision number to announce
+        required: true
+        type: string
+      announce_email_to:
+        description: Announcement recipient mailing list address
+        required: true
+        type: string
+      announce_subject:
+        description: Announcement email subject
+        required: true
+        type: string
+      announce_body:
+        description: Announcement email body
+        required: true
+        type: string
+      announce_path_suffix:
+        description: Download path suffix
+        required: true
+        type: string
+
+permissions: { contents: read }
+
+jobs:
+  announce-release:
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout (shallow, no persisted credentials)
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Announce release on ATR
+        uses: apache/tooling-actions/release-on-atr@069a1104d7901d8491422b71f8e9fbe8674ecf50
+        with:
+          version: ${{ inputs.version }}
+          announce: 'true'
+          announce-revision: ${{ inputs.announce_revision }}
+          announce-email-to: ${{ inputs.announce_email_to }}
+          announce-subject: ${{ inputs.announce_subject }}
+          announce-body: ${{ inputs.announce_body }}
+          announce-path-suffix: ${{ inputs.announce_path_suffix }}
