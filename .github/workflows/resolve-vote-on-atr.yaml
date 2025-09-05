@@ -32,7 +32,7 @@ jobs:
           persist-credentials: false
 
       - name: Resolve vote on ATR
-        uses: apache/tooling-actions/release-on-atr@6850e4ef8e1be83cb18f23e2c855a2f476df75bd
+        uses: apache/tooling-actions/release-on-atr@a93863e9651344d139c0b35cfa2652a49fcc1203
         with:
           version: ${{ inputs.version }}
           resolve: "true"
