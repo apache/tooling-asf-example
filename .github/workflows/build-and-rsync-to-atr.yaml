@@ -1,5 +1,11 @@
 name: build-and-rsync-to-atr
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version
+        required: true
+        type: string
 permissions: { contents: read }
 
 jobs:
@@ -36,4 +42,4 @@ jobs:
         with:
           asf-uid: sbp
           project: tooling
-          version: 0.3
+          version: ${{ inputs.version }}
