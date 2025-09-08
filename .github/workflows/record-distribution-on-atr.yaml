@@ -1,0 +1,55 @@
+name: record-distribution-on-atr
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version
+        required: true
+        type: string
+      platform:
+        description: Distribution platform
+        required: true
+        type: string
+      distribution_owner_namespace:
+        description: Owner namespace (optional)
+        required: false
+        type: string
+      distribution_package:
+        description: Distribution package
+        required: true
+        type: string
+      distribution_version:
+        description: Distribution version
+        required: true
+        type: string
+      staging:
+        description: Use staging (true or false)
+        required: false
+        default: 'false'
+        type: string
+
+permissions: { contents: read }
+
+jobs:
+  record-distribution:
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout (shallow, no persisted credentials)
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Record distribution on ATR
+        uses: apache/tooling-actions/record-atr-distribution@0613f93144f101a63529a380a1a1a031081da4a0
+        with:
+          version: ${{ inputs.version }}
+          platform: ${{ inputs.platform }}
+          distribution-owner-namespace: ${{ inputs.distribution_owner_namespace }}
+          distribution-package: ${{ inputs.distribution_package }}
+          distribution-version: ${{ inputs.distribution_version }}
+          staging: '${{ inputs.staging }}'

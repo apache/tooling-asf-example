@@ -3,11 +3,11 @@ revision = 3
 requires-python = ">=3.13"
 
 [options]
-exclude-newer = "2025-09-08T15:45:57Z"
+exclude-newer = "2025-09-08T18:19:25Z"
 
 [[package]]
 name = "asf-example"
-version = "0.0.1.dev28"
+version = "0.0.1.dev29"
 source = { editable = "." }
 dependencies = [
     { name = "pygit2" },

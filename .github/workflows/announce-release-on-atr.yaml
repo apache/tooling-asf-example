@@ -44,7 +44,7 @@ jobs:
           persist-credentials: false
 
       - name: Announce release on ATR
-        uses: apache/tooling-actions/release-on-atr@12f29cfe2ceeac16e9aabfe880462d2a45425e82
+        uses: apache/tooling-actions/release-on-atr@0613f93144f101a63529a380a1a1a031081da4a0
         with:
           version: ${{ inputs.version }}
           announce: 'true'
