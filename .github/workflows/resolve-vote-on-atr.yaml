@@ -25,12 +25,6 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout (shallow, no persisted credentials)
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
-        with:
-          fetch-depth: 1
-          persist-credentials: false
-
       - name: Resolve vote on ATR
         uses: apache/tooling-actions/release-on-atr@0613f93144f101a63529a380a1a1a031081da4a0
         with:
