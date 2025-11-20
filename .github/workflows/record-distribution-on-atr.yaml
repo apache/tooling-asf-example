@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Record distribution on ATR
-        uses: apache/tooling-actions/record-atr-distribution@0613f93144f101a63529a380a1a1a031081da4a0
+        uses: apache/tooling-actions/record-atr-distribution@b9819f85624ebe71db74d67f8a1f48cc962f83a8
         with:
           version: ${{ inputs.version }}
           platform: ${{ inputs.platform }}
