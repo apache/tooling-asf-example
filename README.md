@@ -14,10 +14,8 @@ The purpose of this package is to test:
 
 The proposed packaging conventions are:
 
-- Use the `asf-*` prefix scheme for PyPI package names to align with PEP 752
-- Use `asf.*` for package interfaces, utilising PEP 420 namespacing
-- Ensure that package code is in `src/asf/*/` only
-- Ensure that `src/asf/*/` contains an `__init__.py`
+- Use `asf${NAME}` or `${NAME}` for PyPI package names, depending on whether the package is for ASF use only or not
+- Ensure that package code is in `${NAME}/` only
 - Use `0.0.N` for versions, starting with `0.0.1`
 - Increment `N` for each released version
 - Optionally use `0.0.(N+1)-devM` for non-release `main` commits
@@ -34,5 +32,7 @@ A package having three commits on `main`, then a release, then two more commits 
 0.0.2-dev2
 0.0.2
 ```
+
+But there is a question of what to do about rebasing.
 
 These packaging conventions are proposed only for ASF Infra and Tooling packages which will be published to PyPI. Other packages, for internal use, may use any packaging conventions. Aligning with these conventions, if adopted, would, however, make it easier to promote internal packages to PyPI.
