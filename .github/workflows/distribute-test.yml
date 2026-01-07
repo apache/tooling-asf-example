@@ -1,4 +1,4 @@
-# Licensed to the Apache Software Foundation (ASF) under one
+  # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
 # regarding copyright ownership.  The ASF licenses this file
@@ -30,6 +30,9 @@ on:
       distribution-package:
         description: 'Package/project name in ATR'
         required: true
+      project:
+        description: 'Project in ATR to pull files from'
+        required: true
       version:
         description: 'Version in ATR to pull files from'
         required: true
@@ -45,9 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Distribute from ATR
-        uses: apache/tooling-actions/atr-distribute-test@da8b238137453a21eb3e93192b8aff73e9ce68e4
+        uses: apache/tooling-actions/atr-distribute-test@ca6ed9e095c40db61c42a90db2599bb2fbc2319f
         with:
           platform: ${{ inputs.platform }}
           distribution-package: ${{ inputs.distribution-package }}
           version: ${{ inputs.version }}
+          project: ${{ inputs.project }}
           distribution-version: ${{ inputs.distribution-version }}
