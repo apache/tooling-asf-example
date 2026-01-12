@@ -39,6 +39,10 @@ on:
       distribution-version:
         description: 'Distribution version'
         required: true
+      staging:
+        description: 'Whether to perform a staging release or not'
+        required: false
+        default: "false"
 
 jobs:
   upload:
