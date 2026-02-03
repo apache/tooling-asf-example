@@ -42,3 +42,4 @@ jobs:
         with:
           project: tooling
           version: ${{ inputs.version }}
+          atr-host: tooling-vm-ec2-de.apache.org
