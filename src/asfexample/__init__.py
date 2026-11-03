@@ -35,9 +35,9 @@ import tomlkit.items
 
 # TODO: Move most of this to __main__.py or wherever is appropriate
 
-PROJECT: Final[str] = "asf-example"
+PROJECT: Final[str] = "asfexample"
 # This is automatically updated
-VERSION: Final[str] = "0.0.1-dev33"
+VERSION: Final[str] = "0.0.1.dev0+dev"
 
 
 class BumpMode(enum.Enum):
@@ -56,7 +56,7 @@ class HeadVersion:
     def __str__(self) -> str:
         if self.dev is None:
             return f"{self.major}.{self.minor}.{self.patch}"
-        return f"{self.major}.{self.minor}.{self.patch}-dev{self.dev}"
+        return f"{self.major}.{self.minor}.{self.patch}.dev{self.dev}+dev"
 
 
 ZERO_VERSION_SENTINEL: Final[HeadVersion] = HeadVersion(major=0, minor=0, patch=0, dev=None)
@@ -103,21 +103,15 @@ def calculate_bumped_version(
         case BumpMode.SPECIFIC:
             if specific is None:
                 report_error_and_exit("specific version required")
-            return ZERO_VERSION_SENTINEL, specific
+            return ZERO_VERSION_SENTINEL, str(parse_version(specific))
         case BumpMode.RELEASE:
             head_version = read_head_version(repository)
-            if head_version.dev is not None:
-                bumped = HeadVersion(
-                    head_version.major,
-                    head_version.minor,
-                    head_version.patch,
-                    None,
-                )
-                return head_version, str(bumped)
+            if head_version.dev is None:
+                report_error_and_exit(f"a dev version is required at HEAD to release, not {head_version}")
             bumped = HeadVersion(
                 head_version.major,
                 head_version.minor,
-                head_version.patch + 1,
+                head_version.patch,
                 None,
             )
             return head_version, str(bumped)
@@ -128,16 +122,10 @@ def calculate_bumped_version(
                     head_version.major,
                     head_version.minor,
                     head_version.patch + 1,
-                    1,
+                    0,
                 )
                 return head_version, str(bumped)
-            bumped = HeadVersion(
-                head_version.major,
-                head_version.minor,
-                head_version.patch,
-                head_version.dev + 1,
-            )
-            return head_version, str(bumped)
+            return head_version, str(head_version)
 
 
 def main() -> NoReturn:
@@ -146,7 +134,7 @@ def main() -> NoReturn:
 
 def parse_version(version: str) -> HeadVersion:
     trace(f"parsing version to HeadVersion: {version}")
-    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:-dev(\d+))?", version)
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:\.dev(0)\+dev)?", version)
     if not match:
         report_error_and_exit(f"unsupported version format: {version}")
     major = int(match.group(1))

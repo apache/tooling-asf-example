@@ -3,9 +3,9 @@ requires      = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name            = "asf-example"
+name            = "asfexample"
 # This is automatically updated
-version         = "0.0.1-dev33"
+version         = "0.0.1.dev0+dev"
 description     = "Example package for ASF Tooling"
 readme          = "README.md"
 requires-python = ">=3.13"
@@ -22,10 +22,10 @@ dependencies = [
 ]
 
 [project.scripts]
-asf-example = "asf.example:main"
+asfexample = "asfexample:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/asf"]
+packages = ["src/asfexample"]
 
 [tool.ruff]
 line-length = 120

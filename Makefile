@@ -7,9 +7,9 @@ build:
 	uv build
 
 bump-dev:
-	@# This assumes that we have the latest version of "asf-example"
+	@# This assumes that we have the latest version of "asfexample"
 	@# If not, run "uv pip install -e ." first
-	uv run asf-example --bump-dev
+	uv run asfexample --bump-dev
 	@# Suppress the warning about ignoring the existing lockfile
 	rm -f uv.lock
 	@# This writes the new stamp into the uv.lock file and upgrades the package
@@ -17,9 +17,9 @@ bump-dev:
 	uv sync
 
 bump-release:
-	@# This assumes that we have the latest version of "asf-example"
+	@# This assumes that we have the latest version of "asfexample"
 	@# If not, run "uv pip install -e ." first
-	uv run asf-example --bump-release
+	uv run asfexample --bump-release
 	@# Suppress the warning about ignoring the existing lockfile
 	rm -f uv.lock
 	@# This writes the new stamp into the uv.lock file and upgrades the package

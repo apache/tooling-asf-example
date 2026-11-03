@@ -8,7 +8,7 @@ on:
 permissions: { contents: read }
 
 env:
-  PACKAGE_NAME: asf-example
+  PACKAGE_NAME: asfexample
 
 jobs:
   linux:

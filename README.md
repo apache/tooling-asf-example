@@ -1,4 +1,4 @@
-# asf-example
+# asfexample
 
 **This package does not have official Apache Software Foundation (ASF) releases.**
 
@@ -18,21 +18,20 @@ The proposed packaging conventions are:
 - Ensure that package code is in `${NAME}/` only
 - Use `0.0.N` for versions, starting with `0.0.1`
 - Increment `N` for each released version
-- Optionally use `0.0.(N+1)-devM` for non-release `main` commits
-- Start with `-dev1` if using non-release `main` commit versions
+- Use `0.0.(N+1).dev0+dev` for non-release `main` commits, starting with `0.0.1.dev0+dev`
 
-A package having three commits on `main`, then a release, then two more commits to `main`, then another release, will for example use the following versions if opting into `-devM` versions:
+The `+dev` makes it a local version, which PyPI will not accept, so a build from source can never be published as a release. The `.dev0` makes it a pre-release, so installers that can see both choose the release.
+
+A package having three commits on `main`, then a release, then two more commits to `main`, then another release, will for example use the following versions:
 
 ```
-0.0.1-dev1
-0.0.1-dev2
-0.0.1-dev3
+0.0.1.dev0+dev
+0.0.1.dev0+dev
+0.0.1.dev0+dev
 0.0.1
-0.0.2-dev1
-0.0.2-dev2
+0.0.2.dev0+dev
+0.0.2.dev0+dev
 0.0.2
 ```
-
-But there is a question of what to do about rebasing.
 
 These packaging conventions are proposed only for ASF Infra and Tooling packages which will be published to PyPI. Other packages, for internal use, may use any packaging conventions. Aligning with these conventions, if adopted, would, however, make it easier to promote internal packages to PyPI.
