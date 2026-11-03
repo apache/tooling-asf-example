@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
-import datetime
 import enum
 import os
 import pathlib
@@ -277,9 +276,7 @@ def update_pyproject_version(bumped_version: str) -> None:
             pyproject_path.open("r", encoding="utf-8", newline="") as src,
         ):
             content = src.read()
-            now = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
             content = replace_key_in_section(content, "project", "version", bumped_version)
-            content = replace_key_in_section(content, "tool.uv", "exclude-newer", now)
             tmp.write(content)
         os.replace(tmp_name, pyproject_path)
     except Exception as exc:
