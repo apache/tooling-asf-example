@@ -1,6 +1,6 @@
 [build-system]
-requires      = ["hatchling"]
-build-backend = "hatchling.build"
+requires      = ["uv_build>=0.13.5,<0.14"]
+build-backend = "uv_build"
 
 [project]
 name            = "asfexample"
@@ -10,6 +10,7 @@ description     = "Example package for ASF Tooling"
 readme          = "README.md"
 requires-python = ">=3.13"
 license         = "Apache-2.0"
+license-files   = ["LICENSE", "NOTICE"]
 authors         = [{name = "ASF Tooling", email = "dev@tooling.apache.org"}]
 classifiers     = [
   "Programming Language :: Python :: 3 :: Only",
@@ -24,8 +25,8 @@ dependencies = [
 [project.scripts]
 asfexample = "asfexample:main"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/asfexample"]
+[dependency-groups]
+dev = ["pytest"]
 
 [tool.ruff]
 line-length = 120
