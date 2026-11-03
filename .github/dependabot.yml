@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+    versioning-strategy: "lockfile-only"
+    allow:
+      - dependency-type: "all"
+    cooldown:
+      default-days: 7
+    groups:
+      development-tools:
+        patterns:
+          - "*"

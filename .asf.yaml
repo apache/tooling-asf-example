@@ -1,4 +1,6 @@
 github:
+  dependabot_alerts: true
+  dependabot_updates: false
   rulesets:
     - name: "Main branch"
       type: branch
@@ -32,3 +34,8 @@ github:
         policies:
           - name: "v*"
             type: tag
+
+notifications:
+  commits: commits@tooling.apache.org
+  issues: issues@tooling.apache.org
+  pullrequests: issues@tooling.apache.org
