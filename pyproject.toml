@@ -4,7 +4,6 @@ build-backend = "uv_build"
 
 [project]
 name            = "asfexample"
-# This is automatically updated
 version         = "0.0.1.dev0+dev"
 description     = "Example package for ASF Tooling"
 readme          = "README.md"

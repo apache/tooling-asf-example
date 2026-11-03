@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import dataclasses
 import enum
+import importlib.metadata
 import os
 import pathlib
 import re
@@ -35,8 +36,6 @@ import tomlkit.items
 # TODO: Move most of this to __main__.py or wherever is appropriate
 
 PROJECT: Final[str] = "asfexample"
-# This is automatically updated
-VERSION: Final[str] = "0.0.1.dev0+dev"
 
 
 class BumpMode(enum.Enum):
@@ -209,7 +208,7 @@ def run_cli() -> int:
 def run_using_args(args: argparse.Namespace) -> int:
     # Report the current version if --version is present
     if args.version:
-        print(VERSION)
+        print(importlib.metadata.version(PROJECT))
         return 0
 
     # Check that we are in the correct directory
@@ -223,9 +222,7 @@ def run_using_args(args: argparse.Namespace) -> int:
     # Calculate the bumped version
     head_version, bumped_version = calculate_bumped_version(repository, mode, specific)
 
-    # Update the version in __init__.py and pyproject.toml
     # TODO: Allow paths to files containing the version to be specified
-    update_init_version(bumped_version)
     update_pyproject_version(bumped_version)
 
     # Report the result
@@ -235,35 +232,6 @@ def run_using_args(args: argparse.Namespace) -> int:
 
 def trace(message: str) -> None:
     print(f"trace: {message}", file=sys.stderr)
-
-
-def update_init_version(bumped_version: str) -> None:
-    trace(f"update init version with bumped version: {bumped_version}")
-    init_path = pathlib.Path(__file__)
-    # TODO: This pattern is very fragile, needs improvement
-    version_pattern = r'VERSION:\s*Final\[str\]\s*=\s*".*?"\s*\n?'
-    tmp_fd, tmp_name = tempfile.mkstemp(prefix="__init__.", suffix=".tmp", dir=str(init_path.parent))
-    try:
-        with (
-            os.fdopen(tmp_fd, "w", encoding="utf-8", newline="") as tmp,
-            init_path.open("r", encoding="utf-8", newline="") as src,
-        ):
-            # Only do this once
-            replaced = False
-            for line in src:
-                contains_version = re.fullmatch(version_pattern, line)
-                if (not replaced) and contains_version:
-                    tmp.write(f'VERSION: Final[str] = "{bumped_version}"\n')
-                    replaced = True
-                else:
-                    tmp.write(line)
-        os.replace(tmp_name, init_path)
-    except Exception:
-        try:
-            os.remove(tmp_name)
-        except Exception:
-            pass
-        report_error_and_exit("failed to update VERSION constant in __init__.py")
 
 
 def update_pyproject_version(bumped_version: str) -> None:
