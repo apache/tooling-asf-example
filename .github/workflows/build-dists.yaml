@@ -42,7 +42,9 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
       - name: Setup uv
-        uses: astral-sh/setup-uv@e92bafb6253dcd438e0484186d7669ea7a8ca1cc # v6.4.3
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: "latest-known"
       - name: Build dists with uv (sdist+wheel)
         run: uv build --sdist --wheel
       - name: Upload dists artifact (macos-aarch64)

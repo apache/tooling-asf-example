@@ -1,7 +1,7 @@
 # TODO: Automatically build the .PHONY line
 # TODO: Add documentation
 .PHONY: build bump-dev bump-release check-dev check-release commit \
-install pre-commit update-deps
+install prek update-deps
 
 build:
 	uv build
@@ -26,12 +26,12 @@ bump-release:
 	@# We do not have to use --upgrade as that is only for dependencies
 	uv sync
 
-check-dev: pre-commit bump-dev
+check-dev: prek bump-dev
 	@# We run lint modifications first, then update the version
 	@# We do not consider the following a lint as it runs all test cases always
 	uv run pytest -q
 
-check-release: pre-commit bump-release
+check-release: prek bump-release
 	@# We run lint modifications first, then update the version
 	@# We do not consider the following a lint as it runs all test cases always
 	uv run pytest -q
@@ -46,9 +46,9 @@ commit:
 install:
 	uv pip install -e .
 
-pre-commit:
+prek:
 	git add -A
-	uv run pre-commit run --all-files
+	PREK_SKIP=version uv run prek run --all-files
 
 update-deps:
 	uv lock --upgrade

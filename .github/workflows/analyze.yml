@@ -1,4 +1,4 @@
-name: Analyze using pre-commit hooks
+name: Analyze using prek hooks
 
 on:
   pull_request:
@@ -7,38 +7,25 @@ on:
 permissions:
   contents: read
 
-env:
-  UV_VERSION: '0.7.12'
-
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-          - '3.13'
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-      - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
-        with:
-          python-version: ${{ matrix.python-version }}
       - name: Install uv
-        uses: astral-sh/setup-uv@4959332f0f014c5280e7eac8b70c90cb574c9f9b # v6.6.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
-          version: ${{ env.UV_VERSION }}
+          version: "latest-known"
 
-      - name: Install dependencies
-        run: uv sync --dev
+      - name: Run prek
+        run: uv run --locked prek run --show-diff-on-failure --color=always --all-files
+        env:
+          PREK_SKIP: version
 
-      - name: Cache pre-commit data
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
-        with:
-          path: ~/.cache/pre-commit
-          key: pre-commit-3|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+      - name: Run pyright
+        run: uv run --locked pyright
 
-      - name: Run pre-commit
-        run: |
-          uv run pre-commit run --show-diff-on-failure --color=always --all-files
+      - name: Run zizmor
+        run: uv run --locked zizmor --min-severity low --offline .github
