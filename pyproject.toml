@@ -21,6 +21,9 @@ dependencies = [
     "tomlkit>=0.13.3",
 ]
 
+[project.urls]
+Source = "https://github.com/apache/tooling-asf-example"
+
 [project.scripts]
 asfexample = "asfexample:main"
 

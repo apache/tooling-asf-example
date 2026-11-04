@@ -36,6 +36,14 @@ A package having three commits on `main`, then a release, then two more commits 
 
 These packaging conventions are proposed only for ASF Infra and Tooling packages which will be published to PyPI. Other packages, for internal use, may use any packaging conventions. Aligning with these conventions, if adopted, would, however, make it easier to promote internal packages to PyPI.
 
+## Releasing
+
+To release `0.0.N`, run `uv version 0.0.N`, commit, tag that commit `v0.0.N`, and push both together with `git push --atomic origin main v0.0.N`. A tag pushed on its own after its commit is not checked by the hooks.
+
+The upload waits for approval. One of the other maintainers listed in `.asf.yaml` must approve it on GitHub, and two members of ASF Tooling must approve it at https://releases.apache.org/gates.
+
+Afterwards, run `uv version 0.0.(N+1).dev0+dev` with the next number filled in, commit, and push. Always set the version explicitly: `uv version --bump stable` keeps the `+dev`.
+
 ## Development
 
 Run `uv run prek install` once after cloning. Its hooks run the linters and check the version scheme on every commit, and add the type checks and tests on every push.
