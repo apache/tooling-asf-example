@@ -18,6 +18,21 @@ github:
       rules:
         - type: update
         - type: deletion
+    - name: "Protection test"
+      target: tag
+      enforcement: active
+      conditions:
+        ref_name:
+          include:
+            - "refs/tags/protection-test-*"
+          exclude: []
+      bypass_actors:
+        - actor_id: 4
+          actor_type: RepositoryRole
+          bypass_mode: always
+      rules:
+        - type: creation
+        - type: update
   environments:
     pypi:
       required_reviewers:
