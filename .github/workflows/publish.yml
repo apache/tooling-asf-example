@@ -68,7 +68,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - run: test "$(curl -fsS "https://releases.apache.org/gates/status/$GITHUB_REPOSITORY_ID/$GITHUB_RUN_ID/$GITHUB_RUN_ATTEMPT")" = APPROVED
+      - run: test "$(curl -fsS --retry 8 --retry-all-errors "https://releases.apache.org/gates/status/$GITHUB_REPOSITORY_ID/$GITHUB_RUN_ID/$GITHUB_RUN_ATTEMPT")" = APPROVED
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: dist
