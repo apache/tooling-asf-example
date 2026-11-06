@@ -23,6 +23,9 @@ dev = [
     { name = "ruff" },
     { name = "zizmor" },
 ]
+test = [
+    { name = "pytest" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -38,6 +41,7 @@ dev = [
     { name = "ruff" },
     { name = "zizmor" },
 ]
+test = [{ name = "pytest" }]
 
 [[package]]
 name = "cffi"

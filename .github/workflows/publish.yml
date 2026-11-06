@@ -56,7 +56,7 @@ jobs:
         with:
           name: dist
           path: dist/
-      - run: uv sync --locked --no-install-project
+      - run: uv sync --locked --no-install-project --no-default-groups --group test
       - run: uv pip install dist/*.whl
       - run: uv run --no-sync pytest
       - run: test "$(uv run --no-sync asfexample --version)" = "${GITHUB_REF_NAME#v}"

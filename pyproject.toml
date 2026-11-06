@@ -28,7 +28,8 @@ Source = "https://github.com/apache/tooling-asf-example"
 asfexample = "asfexample:main"
 
 [dependency-groups]
-dev = ["prek", "pyright", "pytest", "ruff", "zizmor"]
+dev = [{ include-group = "test" }, "prek", "pyright", "ruff", "zizmor"]
+test = ["pytest"]
 
 [tool.ruff]
 line-length = 120
