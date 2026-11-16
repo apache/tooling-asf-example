@@ -1,7 +1,10 @@
 name: publish
+run-name: ${{ github.ref_type == 'tag' && format('Publish {0}', github.ref_name) || 'Rehearse publishing' }}
 on:
   push:
+    branches: [main]
     tags: ["v*"]
+  pull_request:
 permissions: {}
 
 jobs:
@@ -18,11 +21,13 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
+          enable-cache: false
           version: "latest-known"
       - run: python3 -I scripts/check_github_settings.py
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - run: python3 -I scripts/check_version.py
+        if: github.ref_type == 'tag'
         env:
           PRE_COMMIT_REMOTE_BRANCH: ${{ github.ref }}
           PRE_COMMIT_TO_REF: ${{ github.sha }}
@@ -52,6 +57,7 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
+          enable-cache: false
           version: "latest-known"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
@@ -61,9 +67,11 @@ jobs:
       - run: uv pip install dist/*.whl
       - run: uv run --no-sync pytest
       - run: test "$(uv run --no-sync asfexample --version)" = "${GITHUB_REF_NAME#v}"
+        if: github.ref_type == 'tag'
 
   publish:
     needs: [build, test]
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
