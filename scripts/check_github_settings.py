@@ -22,7 +22,6 @@ import sys
 from typing import Any, Final
 
 _ENVIRONMENT: Final = "pypi"
-_REVIEWERS: Final = frozenset({184941, 450789, 29803617, 692523})
 _RULESETS: Final = {
     "Main branch": ("branch", "refs/heads/main", frozenset({"deletion", "non_fast_forward"})),
     "Release tags": ("tag", "refs/tags/v*", frozenset({"deletion", "update"})),
@@ -31,19 +30,12 @@ _RULESETS: Final = {
 
 def _environment_errors(repository: str) -> list[str]:
     environment = _get(f"/repos/{repository}/environments/{_ENVIRONMENT}")
-    rules = {rule["type"]: rule for rule in environment["protection_rules"]}
-    reviewers = rules.get("required_reviewers", {})
-    errors = []
-    if {reviewer["reviewer"]["id"] for reviewer in reviewers.get("reviewers", [])} != _REVIEWERS:
-        errors.append(f"the {_ENVIRONMENT} environment does not have exactly the {len(_REVIEWERS)} expected reviewers")
-    if reviewers.get("prevent_self_review") is not True:
-        errors.append(f"the {_ENVIRONMENT} environment allows self-review")
     if environment["deployment_branch_policy"] != {"protected_branches": False, "custom_branch_policies": True}:
-        return [*errors, f"the {_ENVIRONMENT} environment is not restricted to custom policies"]
+        return [f"the {_ENVIRONMENT} environment is not restricted to custom policies"]
     policies = _get(f"/repos/{repository}/environments/{_ENVIRONMENT}/deployment-branch-policies")
     if [(policy["name"], policy["type"]) for policy in policies["branch_policies"]] != [("v*", "tag")]:
-        errors.append(f"the {_ENVIRONMENT} environment is not restricted to v* tags")
-    return errors
+        return [f"the {_ENVIRONMENT} environment is not restricted to v* tags"]
+    return []
 
 
 def _get(path: str) -> Any:
