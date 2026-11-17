@@ -10,6 +10,12 @@ The purpose of this package is to test:
 - GHA workflows for trickle down use in other ASF Tooling projects
 - Interaction with the ATR platform presently under development by ASF Tooling
 
+## Reporting issues
+
+Report bugs at https://github.com/apache/tooling-asf-example/issues.
+
+**Do NOT report security vulnerabilities through public GitHub issues.** Please report security vulnerabilities to the Apache Security Team by emailing **security@apache.org**. This is a private mailing list. Please send one plain-text, unencrypted, email for each vulnerability you are reporting. For complete details on reporting and the process, see the [ASF Security Team](https://www.apache.org/security/) page.
+
 ## Proposed conventions
 
 The proposed packaging conventions are:
@@ -38,11 +44,11 @@ These packaging conventions are proposed only for ASF Infra and Tooling packages
 
 ## Releasing
 
-To release `0.0.N`, run `uv version 0.0.N`, commit, tag that commit `v0.0.N`, and push both together with `git push --atomic origin main v0.0.N`. A tag pushed on its own after its commit is not checked by the hooks.
+To release, run `sh scripts/phase.sh release` on an up to date `main`. It changes the version from `0.0.N.dev0+dev` to `0.0.N`, commits, tags that commit `v0.0.N`, and pushes the commit and the tag together.
 
 The upload waits until two members of ASF Tooling approve it at https://releases.apache.org/gates.
 
-Afterwards, run `uv version 0.0.(N+1).dev0+dev` with the next number filled in, commit, and push. Always set the version explicitly: `uv version --bump stable` keeps the `+dev`.
+Afterwards, run `sh scripts/phase.sh develop` to change the version to `0.0.(N+1).dev0+dev`, commit, and push.
 
 ## Development
 
