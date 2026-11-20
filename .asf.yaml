@@ -3,12 +3,17 @@ github:
     issues: true
   dependabot_alerts: true
   dependabot_updates: false
+  enabled_merge_buttons:
+    squash: true
+    merge: false
+    rebase: true
   rulesets:
     - name: "Main branch"
       type: branch
       branches:
         includes:
           - "main"
+      required_linear_history: true
     - name: "Release tags"
       target: tag
       enforcement: active

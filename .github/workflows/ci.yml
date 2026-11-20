@@ -39,6 +39,7 @@ jobs:
       - run: uv run --locked python -I scripts/check_version.py
         env:
           PRE_COMMIT_FROM_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+          PRE_COMMIT_REMOTE_BRANCH: ${{ github.ref }}
           PRE_COMMIT_TO_REF: ${{ github.sha }}
       - run: uv run --locked python -I scripts/check_uv_pins.py
       - run: uv run --locked prek run --show-diff-on-failure --color=always --all-files
